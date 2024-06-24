@@ -10,13 +10,26 @@ const bounds = [
     [31.53, 122.12]  // Northeast coordinates
   ];
 
-var customIcon = new L.Icon({
-    iconUrl: 'marker_icon.png',
-    // shadowUrl: 'marker_icon.png',
-    iconSize: [48, 48], // 图标的大小
-    iconAnchor: [12, 41], // 图标的锚点（图标底部中心点）
-    popupAnchor: [1, -34] // 弹出信息窗口的锚点
-});
+// 定义两种类型的图标
+const iconUrls = {
+  type1: 'marker_icon.png',
+  type2: 'marker_pin.png'
+};
+
+const icons = {
+  type1: new L.Icon({
+    iconUrl: iconUrls.type1,
+    iconSize: [48, 48],
+    iconAnchor: [12, 41],
+    popupAnchor: [12, -40]
+  }),
+  type2: new L.Icon({
+    iconUrl: iconUrls.type2,
+    iconSize: [48, 48],
+    iconAnchor: [12, 41],
+    popupAnchor: [12, -40]
+  })
+};
 
 const MapComponent = ({markers, onmarkerClick}) => {
     console.log("Markers:", markers);
@@ -33,11 +46,13 @@ const MapComponent = ({markers, onmarkerClick}) => {
         >
             <TileLayer url={TianDituURL} />
             {markers.map((marker) => (
-                <Marker key={marker.id} position={marker.position} icon={customIcon} eventHandlers={{ click: () => onmarkerClick(marker) }}>
+                <Marker key={marker.id} position={marker.position} icon={icons[marker.icontype]} eventHandlers={{ click: () => onmarkerClick(marker) }}>
                 <Popup>
                     <strong>{marker.name}</strong>
                     <br></br>
                     地址: {marker.address}
+                    <br />
+                    交通方式: {marker.traffic}
                 </Popup>
                 </Marker>
             ))}
@@ -46,27 +61,41 @@ const MapComponent = ({markers, onmarkerClick}) => {
       {/* 标题 */}
       <div style={{
         position: 'absolute',
-        top: '10px',
+        top: '1%',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 1000,
         color: 'black',
         fontSize: '24px'
       }}>
-        上海漫展地图
+        上海综合性漫展&Only展场馆地图
+      </div>
+    {/* 版本号 */}
+       <div style={{
+        position: 'absolute',
+        top: '5%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000,
+        color: 'black',
+        fontSize: '12px'
+      }}>
+        ver. 20240624
       </div>
 
       {/* 版权信息 */}
       <div style={{
         position: 'absolute',
-        bottom: '10px',
+        bottom: '1  %',
         left: '1%',
         // transform: 'translateX(-50%)',
         zIndex: 1000,
         color: 'grey',
         fontSize: '12px'
       }}>
-        © 2024 Yukino Shiratama, 地图矢量图来自天地图
+        © 2024 雪野子, 底图矢量图来自<a href="https://www.tianditu.gov.cn/">天地图</a>
+        <br />
+        Powered by heterochromia nekomusume.
       </div>
         </div>
     )
